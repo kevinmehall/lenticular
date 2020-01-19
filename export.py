@@ -9,12 +9,12 @@ def process(project):
     os.makedirs(out, exist_ok=True)
 
     for i, photo in enumerate(project.photos):
-        print(f"{i+1:2d}/{len(project.photos):2d}: {photo.path}")
+        print("{:2d}/{:2d}: {}".format(i+1, len(project.photos), photo.path))
         image = Image.open(photo.fname())
         inv = np.linalg.inv(photo.transform_matrix())
         transformed = image.transform(project.crop_size(), Image.AFFINE, data=inv.flatten()[:6], resample=Image.CUBIC)
         transformed.thumbnail(project.out_size(), resample=Image.BICUBIC)
-        out_path = os.path.join(out, f"{i}.jpg")
+        out_path = os.path.join(out, "{}.jpg".format(i))
         transformed.save(out_path)
 
 if __name__ == "__main__":
